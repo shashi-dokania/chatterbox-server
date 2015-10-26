@@ -11,13 +11,12 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-
+var results = [];
 var requestHandler = function(request, response) {  
   var statusCode = 200;
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "text/plain";
-  var results = [];
-  
+  console.log('another message');
   var pathname = request.url;
 
   // fallback response
@@ -32,8 +31,8 @@ var requestHandler = function(request, response) {
     response.writeHead(statusCode, headers);
     var data = {'results': results};
     response.end(JSON.stringify(data));  
-  } else if (method === 'POST'){
-    results.push();
+  } else if (method === 'POST'){ 
+    results.push(request._postData);
     statusCode = 201;    
     response.writeHead(statusCode, headers);
     response.end('Accepting posts');

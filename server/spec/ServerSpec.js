@@ -75,7 +75,7 @@ describe('Node Server Request Listener Function', function() {
     expect(res._ended).to.equal(true);
   });
 
-  // it('Should respond with messages that were previously posted', function() {
+  it('Should respond with messages that were previously posted', function() {
     var stubMsg = {
       username: 'Jono',
       message: 'Do my bidding!'
@@ -93,27 +93,27 @@ describe('Node Server Request Listener Function', function() {
   
     handler.requestHandler(req, res);
   
-  //   expect(res._responseCode).to.equal(200);
-  //   var messages = JSON.parse(res._data).results;
-  //   expect(messages.length).to.be.above(0);
-  //   expect(messages[0].username).to.equal('Jono');
-  //   expect(messages[0].message).to.equal('Do my bidding!');
-  //   expect(res._ended).to.equal(true);
-  // });
-  // 
-  // 
-  // it('Should 404 when asked for a nonexistent file', function() {
-  //   var req = new stubs.request('/arglebargle', 'GET');
-  //   var res = new stubs.response();
-  // 
-  //   handler.requestHandler(req, res);
-  // 
-  //   // Wait for response to return and then check status code
-  //   waitForThen(
-  //     function() { return res._ended; },
-  //     function() {
-  //       expect(res._responseCode).to.equal(404);
-  //   });
-  // });
+    expect(res._responseCode).to.equal(200);
+    var messages = JSON.parse(res._data).results;
+    expect(messages.length).to.be.above(0);
+    expect(messages[0].username).to.equal('Jono');
+    expect(messages[0].message).to.equal('Do my bidding!');
+    expect(res._ended).to.equal(true);
+  });
+  
+  
+  it('Should 404 when asked for a nonexistent file', function() {
+    var req = new stubs.request('/arglebargle', 'GET');
+    var res = new stubs.response();
+  
+    handler.requestHandler(req, res);
+  
+    // Wait for response to return and then check status code
+    waitForThen(
+      function() { return res._ended; },
+      function() {
+        expect(res._responseCode).to.equal(404);
+    });
+  });
 
 });
