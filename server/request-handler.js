@@ -21,6 +21,8 @@ var requestHandler = function(request, response) {
 
   // fallback response
   if (pathname !== '/classes/room1'){
+    statusCode = 404;
+    response.writeHead(statusCode, headers);
     response.end('Hello world');
     return;
   }
