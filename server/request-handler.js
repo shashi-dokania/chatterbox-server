@@ -11,7 +11,9 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
-
+var fs = require('fs');
+var url = require('url');
+var message = {results: []};
 var requestHandler = function(request, response) {
   // Request and Response come from node's http module.
   //
@@ -39,11 +41,54 @@ var requestHandler = function(request, response) {
   //
   // You will need to change this if you are sending something
   // other than plain text, like JSON or HTML.
-  headers['Content-Type'] = "text/plain";
+  headers['Content-Type'] = "text/html";
 
   // .writeHead() writes to the request line and headers of the response,
   // which includes the status and all headers.
-  response.writeHead(statusCode, headers);
+  //response.writeHead(statusCode, headers);
+  // var source = fs.createReadStream('../index.html');
+  //   response.writeHead(statusCode, headers);
+  //   source.pipe(response);
+
+  var requestURL = url.parse(request.url);
+  console.log(requestURL);
+  
+  if (requestURL.pathname.indexOf('/classes/') !== -1) {
+    if (request.method === 'GET') {
+      statusCode = 200;
+      response.writeHead(statusCode, headers);
+      response.end(JSON.stringify(message));
+    }
+    if (request.method === 'POST') {
+      var body = '';
+      request.on('data', function(chunk) {
+        body += chunk;
+        console.log('body!', body)
+      });
+      request.on('end', function() {
+        message.results.push(JSON.parse(body));
+        response.writeHead(201, headers);
+        response.end(JSON.stringify(message));
+      });
+    }
+  } else if (requestURL.pathname === '/' && request.method === 'GET') {
+    fs.readFile('../index.html', 'utf8', function(err, data) {
+      if (err) {
+        statusCode = 404;
+        response.writeHead(statusCode, headers);
+        response.end("Hello World - Status not found");
+      } else {
+          response.writeHead(statusCode, headers);
+          response.write(data);
+          response.end();
+        }
+
+    });
+  } else {
+      statusCode = 404;
+      response.writeHead(statusCode, headers);
+      response.end("Hello World - Status not found");
+    }
 
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
@@ -52,7 +97,7 @@ var requestHandler = function(request, response) {
   //
   // Calling .end "flushes" the response's internal buffer, forcing
   // node to actually send all the data over to the client.
-  response.end("Hello, World!");
+  
 };
 
 // These headers will allow Cross-Origin Resource Sharing (CORS).
@@ -70,4 +115,5 @@ var defaultCorsHeaders = {
   "access-control-allow-headers": "content-type, accept",
   "access-control-max-age": 10 // Seconds.
 };
+exports.requestHandler = requestHandler;
 
