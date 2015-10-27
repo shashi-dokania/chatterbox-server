@@ -1,6 +1,9 @@
 /* Import node's http module: */
 var http = require("http");
 var req = require("./request-handler");
+var qs = require('querystring');
+//var fs = require('fs');
+//var index = fs.readFileSync('index.html');
 
 
 // Every server needs to listen on a port with a unique number. The

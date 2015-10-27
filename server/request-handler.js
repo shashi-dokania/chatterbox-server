@@ -11,34 +11,58 @@ this file and include it in basic-server.js so that it actually works.
 *Hint* Check out the node module documentation at http://nodejs.org/api/modules.html.
 
 **************************************************************/
+var qs = require('querystring');
+var fs = require('fs');
+//var index = fs.readFileSync('index.html');
+
 var results = [];
 var requestHandler = function(request, response) {  
   var statusCode = 200;
   var headers = defaultCorsHeaders;
   headers['Content-Type'] = "text/plain";
-  console.log('another message');
   var pathname = request.url;
+  // var index = fs.readFileSync('index.html');
+  // response.writeHead(200, headers);
+  // var fileStream = fs.createReadStream('index.html');
+  // fileStream.pipe(response);
+  // return;
 
   // fallback response
-  if (pathname !== '/classes/room1'){
-    statusCode = 404;
-    response.writeHead(statusCode, headers);
-    response.end('Hello world');
-    return;
-  }
   
   //   if pathname is '/classes/room1'
-  var method = request.method;
-  if (method === 'GET'){
-    response.writeHead(statusCode, headers);
-    var data = {'results': results};
-    response.end(JSON.stringify(data));  
-  } else if (method === 'POST'){ 
-    results.push(request._postData);
-    statusCode = 201;    
-    response.writeHead(statusCode, headers);
-    response.end('Accepting posts');
-  } 
+  if (pathname === '/classes/room1' || pathname === '/classes/messages') {
+    var method = request.method;
+    if (method === 'GET'){
+      response.writeHead(statusCode, headers);
+      var data = {'results': results};
+      response.end(JSON.stringify(data));  
+    } else if (method === 'POST'){ 
+      
+      var body = '';     
+      request.on('data', function (data) {
+          body += data;
+      });
+      
+      request.on('end', function () {
+        postObj = qs.parse(body);
+        var qsData;
+        for(var key in postObj) {
+          qsData = key;
+        }
+        var postData = request._postData || JSON.parse(qsData);
+        results.push(postData);
+      });
+
+      statusCode = 201;    
+      response.writeHead(statusCode, headers);
+      response.end(JSON.stringify('\n'));   
+    }
+
+  } else {
+      statusCode = 404;
+      response.writeHead(statusCode, headers);
+      response.end('Hello world');
+    }
 
 };
 
