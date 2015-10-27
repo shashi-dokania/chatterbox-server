@@ -51,7 +51,7 @@ var requestHandler = function(request, response) {
   //   source.pipe(response);
 
   var requestURL = url.parse(request.url);
-  console.log(requestURL);
+  // console.log(requestURL);
   
   if (requestURL.pathname.indexOf('/classes/') !== -1) {
     if (request.method === 'GET') {
@@ -63,7 +63,6 @@ var requestHandler = function(request, response) {
       var body = '';
       request.on('data', function(chunk) {
         body += chunk;
-        console.log('body!', body)
       });
       request.on('end', function() {
         message.results.push(JSON.parse(body));
