@@ -13,24 +13,19 @@ this file and include it in basic-server.js so that it actually works.
 **************************************************************/
 var qs = require('querystring');
 var fs = require('fs');
-//var index = fs.readFileSync('index.html');
 
 var results = [];
 var requestHandler = function(request, response) {  
   var statusCode = 200;
   var headers = defaultCorsHeaders;
-  headers['Content-Type'] = "text/plain";
+  headers['Content-Type'] = "text/html";
   var pathname = request.url;
-  // var index = fs.readFileSync('index.html');
-  // response.writeHead(200, headers);
-  // var fileStream = fs.createReadStream('index.html');
-  // fileStream.pipe(response);
-  // return;
-
-  // fallback response
   
-  //   if pathname is '/classes/room1'
-  if (pathname === '/classes/room1' || pathname === '/classes/messages') {
+  if(pathname === '/') {
+    response.writeHead(statusCode, headers);
+    var source = fs.createReadStream('client/index.html');
+    source.pipe(response);
+  } else if (pathname === '/classes/room1' || pathname === '/classes/messages') {
     var method = request.method;
     if (method === 'GET'){
       response.writeHead(statusCode, headers);

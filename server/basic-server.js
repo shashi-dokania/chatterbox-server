@@ -1,7 +1,7 @@
 /* Import node's http module: */
 var http = require("http");
 var req = require("./request-handler");
-var qs = require('querystring');
+//var qs = require('querystring');
 //var fs = require('fs');
 //var index = fs.readFileSync('index.html');
 
