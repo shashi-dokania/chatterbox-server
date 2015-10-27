@@ -10,35 +10,29 @@
     <script src="client/bower_components/underscore/underscore.js"></script>
     <script src="client/bower_components/backbone/backbone.js"></script>
     <!-- your scripts -->
-    <script src="client/env/config.js"></script>
-    
+    <script src="env/config.js"></script>
+    <script src="client/app.js"></script>
   </head>
   <body>
     <div id="main">
       <h1>chatterbox</h1>
       <!-- Your HTML goes here! -->
-      Room:
-      <select id="roomSelect">
-        <option selected="selected">main</option>
-      </select>
-      <form>
-        <div>
-          <input id="message" type="text">
-          <input id="send" class='submit' type="submit">
-        </div>
-      </form>
-    </div>
+
+      <div class="spinner"><img src="images/spiffygif_46x46.gif"></div>
+      <div id="rooms">
+        Room:
+        <select id="roomSelect">
+        </select>
+      </div>
+      <form action="#" id="send" method="post">
+        <input type="text" name="message" id="message"/>
+        <input type="submit" name="submit" class="submit"/>
+      </form>    </div>
     <div id="chats"></div>
-      <script>
+
+    <script>
       $(function(){
-        
-        var messages = new Messages();
-        messages.loadMsgs();
-        var messageView = new MessageView({collection: messages});
+        app.init()
       });
-        // messages.initialize();
-      </script>
-     <!--<script src="scripts/app.js"></script>-->
-    <script src="client/app.js"></script>
-  </body>
+    </script>  </body>
 </html>

@@ -71,17 +71,16 @@ var requestHandler = function(request, response) {
       });
     }
   } else if (requestURL.pathname === '/' && request.method === 'GET') {
-    fs.readFile('../index.html', 'utf8', function(err, data) {
+    fs.readFile('index.html', 'utf8', function(err, data) {
       if (err) {
-        statusCode = 404;
+         statusCode = 404;
         response.writeHead(statusCode, headers);
-        response.end("Hello World - Status not found");
+        response.end("Hello World - Chatroom not found");
       } else {
           response.writeHead(statusCode, headers);
           response.write(data);
           response.end();
         }
-
     });
   } else {
       statusCode = 404;
@@ -89,6 +88,16 @@ var requestHandler = function(request, response) {
       response.end("Hello World - Status not found");
     }
 
+  //   fs.readFile('index.html', 'utf8', function (err, data) {
+  //   if (err) {
+  //     statusCode = 404;
+  //     response.writeHead(statusCode, headers);
+  //     response.end("Hello - Cannot read file");
+  //   } else {
+  //       response.writeHead(statusCode, headers);
+  //       console.log(data);
+  //     }
+  // });
   // Make sure to always call response.end() - Node may not send
   // anything back to the client until you do. The string you pass to
   // response.end() will be the body of the response - i.e. what shows
